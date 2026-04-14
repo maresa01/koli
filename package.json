@@ -10,6 +10,7 @@
     "dev": "vite",
     "dev:api": "npm run dev -w koli-api",
     "dev:full": "concurrently -n api,web -c cyan,magenta \"npm run dev:api\" \"npm run dev\"",
+    "start": "node server/index.mjs",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "icons:transparent": "node scripts/remove-icons-black-bg.mjs"
