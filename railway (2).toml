@@ -1,6 +1,0 @@
-# https://docs.railway.com/guides/config-as-code
-# Repo root has no index.mjs — API entry is server/index.mjs via npm start.
-[deploy]
-startCommand = "npm run start"
-healthcheckPath = "/health"
-restartPolicyType = "ON_FAILURE"

@@ -3,14 +3,8 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "workspaces": [
-    "server"
-  ],
   "scripts": {
     "dev": "vite",
-    "dev:api": "npm run dev -w koli-api",
-    "dev:full": "concurrently -n api,web -c cyan,magenta \"npm run dev:api\" \"npm run dev\"",
-    "start": "node server/index.mjs",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "icons:transparent": "node scripts/remove-icons-black-bg.mjs"
@@ -24,7 +18,6 @@
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
-    "concurrently": "^9.2.1",
     "puppeteer-core": "^24.40.0",
     "sharp": "^0.34.5",
     "typescript": "~5.7.2",

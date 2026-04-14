@@ -21,6 +21,5 @@ Open the URL Vite prints (usually `http://localhost:5173`).
 
 ## Backend (optional)
 
-There is an optional API under `server/`, but the frontend does not require it.
-If you do deploy `server/`, keep secrets server-side; see `SERVER_BOUNDARIES.md`.
+There is **no backend** in this repo. This is a static frontend only.
 
