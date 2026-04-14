@@ -3,7 +3,7 @@
 
 [build]
 builder = "railpack"
-buildCommand = "npm ci && npm run build"
+buildCommand = "npm run build"
 
 [deploy]
 startCommand = "node index.mjs"
