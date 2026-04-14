@@ -10,7 +10,8 @@ VITE_API_BASE_URL=
 # Show small API status pill for beta testers (set to 1 on hosted beta builds)
 # VITE_SHOW_API_STATUS=1
 
-# Server-only secrets (never VITE_*): see SERVER_BOUNDARIES.md
+# If API has BETA_API_KEY set, send the same value here (still exposed to clients — gate real data with auth later)
+# VITE_BETA_API_KEY=
 
 # --- API server (server/index.mjs) — set on the host (Render, Fly, Railway, etc.) ---
 # PORT=3001

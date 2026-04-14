@@ -73,7 +73,7 @@ After this, in Render you can *connect* that GitHub repo and set *Root Directory
 - Serve *only HTTPS* in production (hosts above provide TLS).
 - Set **CORS_ORIGIN** on the API to your exact web origins (comma-separated), e.g. https://koli.vercel.app (use the real URL of your deployed frontend, not a placeholder).
 - On PaaS behind a reverse proxy, set **TRUST_PROXY=1** (already assumed in render.yaml).
-- Optional shared secret for early non-public routes: set **BETA_API_KEY** on the API only (used for `x-beta-key` on protected routes such as `POST /api/echo`). Do **not** put this in `VITE_*` variables; see **SERVER_BOUNDARIES.md**.
+- Optional shared secret for early non-public routes: set **BETA_API_KEY** on the server and **VITE_BETA_API_KEY** on the frontend build (same value). *Note:* anything prefixed with VITE_ is public to browsers—use this only as a light gate, not for real user data.
 - Never commit **.env** (see .gitignore). Use host “Environment variables” / secrets UI.
 - Static responses get extra headers from **public/_headers** on Netlify and Cloudflare Pages.
 
@@ -136,6 +136,7 @@ Render/Fly/Cloud Run can run this image; set **PORT** if the platform injects it
 3. In *Environment Variables* (for Production):
    - VITE_API_BASE_URL = https://<your-real-api-url> (no /api suffix — e.g. the hostname Render shows after deploy)
    - Optional: VITE_SHOW_API_STATUS = 1
+   - Optional: VITE_BETA_API_KEY = same as server BETA_API_KEY if you enabled it
 4. vercel.json already maps SPA routes to index.html.
 
 ## Deploy the frontend (Netlify)

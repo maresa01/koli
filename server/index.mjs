@@ -125,8 +125,10 @@ app.use((err, _req, res, _next) => {
   return res.status(500).json({ ok: false, error: "internal" });
 });
 
-app.listen(PORT, () => {
-  console.log(`koli-api listening on port ${PORT}`);
+/** Bind all interfaces — required on Railway/Docker so health checks reach the process. */
+const HOST = process.env.HOST || "0.0.0.0";
+app.listen(PORT, HOST, () => {
+  console.log(`koli-api listening on http://${HOST}:${PORT}`);
   if (process.env.NODE_ENV === "production" && allowedOrigins.length === 0) {
     console.warn(
       "WARNING: CORS_ORIGIN is not set — set it to your frontend URL(s), comma-separated (e.g. https://app.example.com), or browsers will get CORS errors."
