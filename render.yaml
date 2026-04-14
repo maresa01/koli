@@ -1,0 +1,21 @@
+# https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: koli-api
+    runtime: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node index.mjs
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: NODE_ENV
+        value: production
+      - key: TRUST_PROXY
+        value: "1"
+      - key: CORS_ORIGIN
+        sync: false
+      - key: BETA_API_KEY
+        sync: false
