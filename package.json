@@ -6,14 +6,15 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "start": "vite preview --host 0.0.0.0 --port $PORT",
+    "start": "node index.mjs",
     "preview": "vite preview",
     "icons:transparent": "node scripts/remove-icons-black-bg.mjs"
   },
   "dependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router-dom": "^7.4.0"
+    "react-router-dom": "^7.4.0",
+    "serve": "^14.2.6"
   },
   "devDependencies": {
     "@types/react": "^19.0.10",
