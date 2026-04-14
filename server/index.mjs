@@ -115,6 +115,8 @@ app.use((err, _req, res, _next) => {
 app.listen(PORT, () => {
   console.log(`koli-api listening on port ${PORT}`);
   if (process.env.NODE_ENV === "production" && allowedOrigins.length === 0) {
-    console.warn("WARNING: CORS_ORIGIN is empty — browser requests from your web app will be blocked.");
+    console.warn(
+      "WARNING: CORS_ORIGIN is not set — set it to your frontend URL(s), comma-separated (e.g. https://app.example.com), or browsers will get CORS errors."
+    );
   }
 });
