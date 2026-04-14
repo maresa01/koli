@@ -79,6 +79,19 @@ function requireBetaKey(req, res, next) {
   return next();
 }
 
+/** Browsers hit / and /favicon.ico — this service is API-only (no SPA here). */
+app.get("/", (_req, res) => {
+  res.json({
+    ok: true,
+    service: "koli-api",
+    hint: "JSON API only. Use GET /health or GET /api/health. The web app is hosted separately.",
+  });
+});
+
+app.get("/favicon.ico", (_req, res) => {
+  res.status(204).end();
+});
+
 app.get("/health", (_req, res) => {
   res.json({
     ok: true,
