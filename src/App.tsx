@@ -11,8 +11,6 @@ import { GameSchulte } from "./pages/GameSchulte";
 import { GameNeuro } from "./pages/GameNeuro";
 import { GameStroop } from "./pages/GameStroop";
 import { About } from "./pages/About";
-import { Register } from "./pages/Register";
-import { Login } from "./pages/Login";
 import { Focus15 } from "./pages/Focus15";
 import "./App.css";
 
@@ -23,8 +21,6 @@ export default function App() {
         <Route element={<Layout />}>
           <Route path="/" element={<Welcome />} />
           <Route path="/about" element={<About />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
           <Route path="/games" element={<Games />} />
           <Route path="/games/visual" element={<GameVisualMemory />} />
           <Route path="/games/sequence" element={<GameSequence />} />

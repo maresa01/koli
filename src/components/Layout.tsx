@@ -9,8 +9,6 @@ import { KoliMascot } from "./KoliGuide";
 const pathTitles: Record<string, string> = {
   "/": t.appName,
   "/about": t.aboutTitle,
-  "/register": t.registerTitle,
-  "/login": t.loginTitle,
   "/focus": t.focus15Title,
   "/games": t.gamesTitle,
   "/games/visual": t.visualGame,
@@ -28,7 +26,7 @@ export function Layout() {
   // const [parentOpen, setParentOpen] = useState(false);
   const loc = useLocation();
   const title = pathTitles[loc.pathname] ?? t.appName;
-  const hideTopBar = ["/", "/about", "/register", "/login"].includes(loc.pathname);
+  const hideTopBar = ["/", "/about"].includes(loc.pathname);
 
   return (
     <div className="layout">

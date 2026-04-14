@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { t } from "../lib/strings";
 import { KoliMascot } from "../components/KoliGuide";
-import { startIntroTour } from "../lib/introTour";
+import { startIntroTour } from "../lib/introTour.ts";
 
 export function Welcome() {
   const navigate = useNavigate();
@@ -27,12 +27,14 @@ export function Welcome() {
         >
           {t.tourStartCta}
         </button>
+        {/* Գրանցում / մուտք — հանված են ինտերֆեյսից
         <Link to="/register" className="btn-secondary btn-large">
           {t.register}
         </Link>
         <Link to="/login" className="btn-secondary btn-large">
           {t.login}
         </Link>
+        */}
       </div>
     </div>
   );
