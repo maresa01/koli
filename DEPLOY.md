@@ -17,6 +17,10 @@ Then open **http://127.0.0.1:3001/health** or **http://127.0.0.1:3001/api/health
 
 There is *no separate native mobile app* in this repo. Beta testers on phones use the *responsive web app* (add to Home Screen if you want an app-like shortcut).
 
+## Frontend-only (no API required)
+
+You can deploy this app as a **static frontend only**. See `FRONTEND_ONLY.md`.
+
 ## Architecture (recommended for external beta)
 
 1. *Static frontend* — stable https:// URL (Vercel, Netlify, Cloudflare Pages, S3+CloudFront, etc.).

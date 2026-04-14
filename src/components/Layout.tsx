@@ -5,7 +5,6 @@ import { useAppState } from "../hooks/useAppState";
 import { useIntroCoins } from "../hooks/useIntroCoins";
 // import { ParentPanel } from "./ParentPanel";
 import { KoliMascot } from "./KoliGuide";
-import { BetaApiStatus } from "./BetaApiStatus";
 
 const pathTitles: Record<string, string> = {
   "/": t.appName,
@@ -87,7 +86,6 @@ export function Layout() {
       <main className="main-area">
         <Outlet />
       </main>
-      <BetaApiStatus />
       {/* {parentOpen && <ParentPanel onClose={() => setParentOpen(false)} />} */}
     </div>
   );
