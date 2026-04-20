@@ -2,8 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GameShell, type GameSessionApi } from "../components/GameShell";
 import { t } from "../lib/strings";
-import { completeGame } from "../lib/storage";
-import { endIntroTourStep } from "../lib/introTour";
+import { endIntroTourStep } from "../lib/introTour.ts";
 import { useIntroTourGame } from "../hooks/useIntroTourGame";
 
 const TRIALS = 5;
@@ -26,7 +25,6 @@ function ReactionBoard({
   const [phase, setPhase] = useState<Phase>("readyClick");
   const [times, setTimes] = useState<number[]>([]);
   const [lastMs, setLastMs] = useState<number | null>(null);
-  const [reward, setReward] = useState<{ bonus: number; total: number } | null>(null);
 
   const tGreenRef = useRef(0);
   const waitTimerRef = useRef(0);
@@ -84,7 +82,7 @@ function ReactionBoard({
         setPhase("summary");
         const avg = next.reduce((a, b) => a + b, 0) / next.length;
         freezeSession();
-        setReward(completeGame(pointsForAverage(avg)));
+        void pointsForAverage(avg);
       } else {
         setPhase("readyClick");
       }
@@ -196,14 +194,6 @@ function ReactionBoard({
                 </li>
               ))}
             </ul>
-            {reward && (
-              <p className="toast-win rt-summary__points" role="status">
-                {t.earned} {reward.total} {t.points}
-                {reward.bonus > 0 && (
-                  <span className="muted"> ({reward.bonus}՝ օրվա բոնուս)</span>
-                )}
-              </p>
-            )}
           </div>
         </div>
       )}

@@ -2,19 +2,18 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GameShell, type GameSessionApi } from "../components/GameShell";
 import { t } from "../lib/strings";
-import { completeGame } from "../lib/storage";
-import { endIntroTourStep } from "../lib/introTour";
+import { endIntroTourStep } from "../lib/introTour.ts";
 import { useIntroTourGame } from "../hooks/useIntroTourGame";
 
 /** braingameszone-style Simon: 4 tiles, sequence grows by 1 each level. */
 const TILES = 4;
 const WIN_LEVEL = 12;
 
-const TILE_STYLES = [
-  { base: "#c0392b", flash: "#ff7675", aria: () => t.seqColorRed },
-  { base: "#2980b9", flash: "#74b9ff", aria: () => t.seqColorBlue },
-  { base: "#f39c12", flash: "#fdcb6e", aria: () => t.seqColorYellow },
-  { base: "#27ae60", flash: "#55efc4", aria: () => t.seqColorGreen },
+const TILE_ARIA = [
+  () => t.seqColorRed,
+  () => t.seqColorBlue,
+  () => t.seqColorYellow,
+  () => t.seqColorGreen,
 ] as const;
 
 function SequenceBoard({
@@ -29,7 +28,6 @@ function SequenceBoard({
   const [active, setActive] = useState<number | null>(null);
   const [gameOver, setGameOver] = useState(false);
   const [won, setWon] = useState(false);
-  const [reward, setReward] = useState<{ bonus: number; total: number } | null>(null);
 
   const seqGenRef = useRef(0);
 
@@ -53,8 +51,8 @@ function SequenceBoard({
       window.setTimeout(() => {
         if (seqGenRef.current !== gen) return;
         setActive(null);
-        window.setTimeout(() => playNext(i + 1), 300);
-      }, 580);
+        window.setTimeout(() => playNext(i + 1), 360);
+      }, 720);
     };
 
     const t0 = window.setTimeout(() => playNext(0), 500);
@@ -69,8 +67,6 @@ function SequenceBoard({
     const want = sequence[playerIdx];
     if (idx !== want) {
       setGameOver(true);
-      const partial = Math.min(16, 4 + Math.max(0, level - 1) * 2);
-      setReward(completeGame(partial));
       return;
     }
     const next = playerIdx + 1;
@@ -78,7 +74,6 @@ function SequenceBoard({
       if (level >= WIN_LEVEL) {
         setWon(true);
         freezeSession();
-        setReward(completeGame(22));
       } else {
         setLevel((l) => l + 1);
       }
@@ -103,28 +98,16 @@ function SequenceBoard({
         {!gameOver && !won && phase === "watch" && t.seqWatch}
         {!gameOver && !won && phase === "play" && t.seqRepeat}
       </p>
-      {reward && (
-        <div className="toast-win" role="status">
-          {t.earned} {reward.total} {t.points}
-          {reward.bonus > 0 && (
-            <span className="muted"> ({reward.bonus}՝ օրվա բոնուս)</span>
-          )}
-        </div>
-      )}
       <p className="seq-bgz-caption muted">{t.seqTiles}</p>
       <div className="seq-bgz-grid" role="group" aria-label={t.sequenceGame}>
-        {TILE_STYLES.map((tile, i) => {
+        {Array.from({ length: TILES }, (_, i) => {
           const lit = active === i;
           return (
             <button
               key={i}
               type="button"
-              className={`seq-bgz-tile ${lit ? "seq-bgz-tile--lit" : ""}`}
-              style={{
-                background: lit ? tile.flash : tile.base,
-                boxShadow: lit ? `0 0 24px ${tile.flash}` : undefined,
-              }}
-              aria-label={tile.aria()}
+              className={`seq-bgz-tile seq-bgz-tile--${i} ${lit ? "seq-bgz-tile--lit" : ""}`}
+              aria-label={TILE_ARIA[i]()}
               onClick={() => onTile(i)}
               disabled={phase !== "play" || won || gameOver}
             />

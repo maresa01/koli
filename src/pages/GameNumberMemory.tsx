@@ -2,7 +2,6 @@ import { useEffect, useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { GameShell, type GameSessionApi } from "../components/GameShell";
 import { t } from "../lib/strings";
-import { completeGame } from "../lib/storage";
 import { endIntroTourStep } from "../lib/introTour.ts";
 import { useIntroTourGame } from "../hooks/useIntroTourGame";
 
@@ -26,7 +25,6 @@ function NumberBoard({
   const [input, setInput] = useState("");
   const [gameOver, setGameOver] = useState(false);
   const [won, setWon] = useState(false);
-  const [reward, setReward] = useState<{ bonus: number; total: number } | null>(null);
 
   const showMs = Math.min(4500, 650 + level * 420);
 
@@ -58,15 +56,11 @@ function NumberBoard({
       if (level >= WIN_DIGITS) {
         setWon(true);
         freezeSession();
-        setReward(completeGame(22));
       } else {
         setLevel((l) => l + 1);
       }
     } else {
       setGameOver(true);
-      const ok = Math.max(0, level - 1);
-      const partial = ok <= 0 ? 3 : Math.min(16, 5 + ok * 2);
-      setReward(completeGame(partial));
     }
   };
 
@@ -100,14 +94,6 @@ function NumberBoard({
           <span className="number-display__hint">{t.enterNumber}</span>
         )}
       </div>
-      {reward && (
-        <div className="toast-win" role="status">
-          {t.earned} {reward.total} {t.points}
-          {reward.bonus > 0 && (
-            <span className="muted"> ({reward.bonus}՝ օրվա բոնուս)</span>
-          )}
-        </div>
-      )}
       <form onSubmit={submit} className="number-form">
         <input
           type="text"

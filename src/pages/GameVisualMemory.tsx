@@ -2,8 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GameShell, type GameSessionApi } from "../components/GameShell";
 import { t } from "../lib/strings";
-import { completeGame } from "../lib/storage";
-import { endIntroTourStep } from "../lib/introTour";
+import { endIntroTourStep } from "../lib/introTour.ts";
 import { useIntroTourGame } from "../hooks/useIntroTourGame";
 
 /** Target level to finish (braingameszone-style progression). */
@@ -59,7 +58,6 @@ function VisualBoard({
   const [feedbackOk, setFeedbackOk] = useState<boolean | null>(null);
   const [won, setWon] = useState(false);
   const [dead, setDead] = useState(false);
-  const [reward, setReward] = useState<{ bonus: number; total: number } | null>(null);
   const timersRef = useRef<number[]>([]);
 
   const clearTimers = () => {
@@ -111,7 +109,6 @@ function VisualBoard({
       if (level === WIN_LEVEL) {
         setWon(true);
         freezeSession();
-        setReward(completeGame(20));
         return;
       }
       setPhase("feedback");
@@ -195,14 +192,6 @@ function VisualBoard({
           {t.vmPickExact} {pattern.size} {t.vmSquares} ({t.selectedCount} {selected.size}/
           {pattern.size})
         </p>
-      )}
-      {won && reward && (
-        <div className="toast-win" role="status">
-          {t.earned} {reward.total} {t.points}
-          {reward.bonus > 0 && (
-            <span className="muted"> ({reward.bonus}՝ այս օրվա առաջին խաղը)</span>
-          )}
-        </div>
       )}
       {dead && (
         <div className="vm-panel vm-panel--bad">

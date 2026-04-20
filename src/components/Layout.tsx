@@ -1,7 +1,6 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
 // import { useState } from "react";
 import { t } from "../lib/strings";
-import { useAppState } from "../hooks/useAppState";
 import { useIntroCoins } from "../hooks/useIntroCoins";
 // import { ParentPanel } from "./ParentPanel";
 import { KoliMascot } from "./KoliGuide";
@@ -21,7 +20,6 @@ const pathTitles: Record<string, string> = {
 };
 
 export function Layout() {
-  const { totalPoints } = useAppState();
   const coins = useIntroCoins();
   // const [parentOpen, setParentOpen] = useState(false);
   const loc = useLocation();
@@ -38,21 +36,6 @@ export function Layout() {
           </Link>
           <div className="top-bar__actions">
             <div className="top-bar__stats" aria-live="polite">
-              <div
-                className="stat-pill stat-pill--energy"
-                aria-label={`${t.energy}: ${totalPoints}`}
-              >
-                <span className="stat-pill__iconWrap stat-pill__iconWrap--energy">
-                  <img
-                    src="/koli-energy-icon.png"
-                    alt=""
-                    className="stat-pill__iconImg"
-                    width={28}
-                    height={28}
-                  />
-                </span>
-                <span className="stat-pill__value">{totalPoints}</span>
-              </div>
               <div
                 className="stat-pill stat-pill--coins"
                 aria-label={`${t.coinsCollected}: ${coins}`}

@@ -90,7 +90,6 @@ export function Tasks() {
                       <div className="task-item__main">
                         <span className="task-item__title">{task.title}</span>
                         <div className="task-item__meta">
-                          <span className="task-item__pts">+{task.points} {t.points}</span>
                           <span className="task-item__focus muted">
                             ⏱ {fm} րոպե
                           </span>

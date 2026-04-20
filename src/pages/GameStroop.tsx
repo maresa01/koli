@@ -3,7 +3,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GameShell, type GameSessionApi } from "../components/GameShell";
 import { t } from "../lib/strings";
-import { completeGame } from "../lib/storage";
 import { endIntroTourStep } from "../lib/introTour";
 import { useIntroTourGame } from "../hooks/useIntroTourGame";
 
@@ -50,7 +49,6 @@ function StroopBoard({
   const [times, setTimes] = useState<number[]>([]);
   const [correct, setCorrect] = useState(0);
   const [done, setDone] = useState(false);
-  const [reward, setReward] = useState<{ bonus: number; total: number } | null>(null);
 
   const completedRef = useRef(false);
 
@@ -78,16 +76,7 @@ function StroopBoard({
     if (completedRef.current) return;
     completedRef.current = true;
 
-    const win = correct >= 24; // 80%+ accuracy in 30 rounds
-    const base = 12;
-    const speedBonus = scoreMs !== null ? Math.max(0, Math.min(10, Math.round((1200 - scoreMs) / 120))) : 0;
-    const accBonus = Math.max(0, Math.min(10, Math.round((accuracy - 60) / 4)));
-    const bonus = win ? 6 + speedBonus + accBonus : Math.max(0, speedBonus + accBonus - 2);
-    const total = base + bonus;
-
-    setReward({ bonus, total });
     freezeSession();
-    completeGame(total);
   }, [accuracy, correct, done, freezeSession, scoreMs]);
 
   const pick = (picked: ColorId) => {
@@ -116,7 +105,6 @@ function StroopBoard({
     setTimes([]);
     setCorrect(0);
     setDone(false);
-    setReward(null);
   };
 
   return (
@@ -167,11 +155,6 @@ function StroopBoard({
               {correct}/{ROUNDS}
             </strong>
           </p>
-          {reward && (
-            <p className="done-sub">
-              {t.earned} <strong>{reward.total}</strong> {t.points}
-            </p>
-          )}
           <div className="game-inner-actions">
             {introTour ? (
               <button

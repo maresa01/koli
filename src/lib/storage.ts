@@ -79,18 +79,13 @@ export function removeEligibleTaskId(id: string) {
 }
 
 export type AppState = {
-  totalPoints: number;
   tasks: HomeworkTask[];
-  /** Calendar day when daily "showed up" bonus was last awarded */
-  lastDailyGameBonusDate: string | null;
 };
 
 const KEY = "koli-app-state-v1";
 
 const emptyState = (): AppState => ({
-  totalPoints: 0,
   tasks: [],
-  lastDailyGameBonusDate: null,
 });
 
 /** Holds one snapshot; replaced (new reference) on each update so useSyncExternalStore sees changes. */
@@ -112,12 +107,7 @@ function parseStorage(): AppState {
     if (!raw) return emptyState();
     const parsed = JSON.parse(raw) as Partial<AppState>;
     return {
-      totalPoints: typeof parsed.totalPoints === "number" ? parsed.totalPoints : 0,
       tasks: Array.isArray(parsed.tasks) ? parsed.tasks.map((t) => ({ ...t })) : [],
-      lastDailyGameBonusDate:
-        typeof parsed.lastDailyGameBonusDate === "string" || parsed.lastDailyGameBonusDate === null
-          ? parsed.lastDailyGameBonusDate ?? null
-          : null,
     };
   } catch {
     return emptyState();
@@ -141,37 +131,13 @@ function replaceState(next: AppState) {
   persist(next);
 }
 
-export function addPoints(amount: number) {
-  const s = getState();
-  replaceState({ ...s, totalPoints: s.totalPoints + amount });
-  return cachedState!.totalPoints;
-}
-
-/** Award game points; first completed game each calendar day adds a small "on time" bonus. */
-export function completeGame(gamePoints: number): { bonus: number; total: number } {
-  const s = getState();
-  const today = new Date().toDateString();
-  let bonus = 0;
-  let lastDaily = s.lastDailyGameBonusDate;
-  if (lastDaily !== today) {
-    bonus = 5;
-    lastDaily = today;
-  }
-  replaceState({
-    ...s,
-    lastDailyGameBonusDate: lastDaily,
-    totalPoints: s.totalPoints + gamePoints + bonus,
-  });
-  return { bonus, total: gamePoints + bonus };
-}
-
-export function addTask(title: string, points: number, focusMinutes = 15): HomeworkTask {
+export function addTask(title: string, focusMinutes = 15): HomeworkTask {
   const s = getState();
   const fm = Math.min(90, Math.max(5, Math.round(focusMinutes)));
   const task: HomeworkTask = {
     id: crypto.randomUUID(),
     title: title.trim(),
-    points: Math.max(0, Math.round(points)),
+    points: 0,
     done: false,
     createdAt: new Date().toISOString(),
     focusMinutes: fm,
@@ -189,24 +155,15 @@ export function toggleTaskDone(id: string) {
   if (done && !wasDone && !getEligibleTaskIds().has(id)) {
     return;
   }
-  let { totalPoints } = s;
-  if (done && !wasDone) totalPoints += task.points;
-  else if (!done && wasDone) totalPoints = Math.max(0, totalPoints - task.points);
   removeEligibleTaskId(id);
   replaceState({
     ...s,
-    totalPoints,
     tasks: s.tasks.map((t) => (t.id === id ? { ...t, done } : t)),
   });
 }
 
 export function deleteTask(id: string) {
   const s = getState();
-  const task = s.tasks.find((t) => t.id === id);
-  let totalPoints = s.totalPoints;
-  if (task?.done) {
-    totalPoints = Math.max(0, totalPoints - task.points);
-  }
   try {
     const raw = localStorage.getItem(FOCUS_ACTIVE_KEY);
     if (raw) {
@@ -219,7 +176,6 @@ export function deleteTask(id: string) {
   removeEligibleTaskId(id);
   replaceState({
     ...s,
-    totalPoints,
     tasks: s.tasks.filter((t) => t.id !== id),
   });
 }

@@ -7,16 +7,14 @@ type Props = { onClose: () => void };
 
 export function ParentPanel({ onClose }: Props) {
   const [title, setTitle] = useState("");
-  const [points, setPoints] = useState(10);
   const [focusMinutes, setFocusMinutes] = useState(15);
   const { tasks } = useAppState();
 
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) return;
-    addTask(title, points, focusMinutes);
+    addTask(title, focusMinutes);
     setTitle("");
-    setPoints(10);
     setFocusMinutes(15);
   };
 
@@ -40,16 +38,6 @@ export function ParentPanel({ onClose }: Props) {
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Օրինակ՝ մաթեմատիկա, էջ 12"
               autoComplete="off"
-            />
-          </label>
-          <label className="field">
-            <span>{t.taskPoints}</span>
-            <input
-              type="number"
-              min={0}
-              max={999}
-              value={points}
-              onChange={(e) => setPoints(Number(e.target.value))}
             />
           </label>
           <label className="field">
@@ -80,7 +68,7 @@ export function ParentPanel({ onClose }: Props) {
                   <strong>{task.title}</strong>
                   <span className="muted">
                     {" "}
-                    — {task.points} {t.points} · {task.focusMinutes ?? 15} րոպե
+                    — {task.focusMinutes ?? 15} րոպե
                   </span>
                 </div>
                 <button

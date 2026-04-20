@@ -2,8 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GameShell, type GameSessionApi } from "../components/GameShell";
 import { t } from "../lib/strings";
-import { completeGame } from "../lib/storage";
-import { endIntroTourStep } from "../lib/introTour";
+import { endIntroTourStep } from "../lib/introTour.ts";
 import { useIntroTourGame } from "../hooks/useIntroTourGame";
 
 /** Classic Schulte table: find 1…N in order on a shuffled grid (mozgotren-style). */
@@ -36,7 +35,6 @@ function SchulteBoard({
   const [lives, setLives] = useState(INITIAL_LIVES);
   const [won, setWon] = useState(false);
   const [dead, setDead] = useState(false);
-  const [reward, setReward] = useState<{ bonus: number; total: number } | null>(null);
 
   const wrongTimerRef = useRef<number | null>(null);
 
@@ -70,8 +68,6 @@ function SchulteBoard({
       if (lives <= 1) {
         setDead(true);
         setLives(0);
-        const partial = Math.min(18, 6 + (level - 1) * 4);
-        setReward(completeGame(partial));
       } else {
         setLives(lives - 1);
         resetRound(level);
@@ -87,7 +83,6 @@ function SchulteBoard({
       if (level >= WIN_LEVEL) {
         setWon(true);
         freezeSession();
-        setReward(completeGame(20));
       } else {
         setLevel((lv) => lv + 1);
       }
@@ -115,14 +110,6 @@ function SchulteBoard({
         <p className="vm-hint muted">
           {grid}×{grid} · {t.schulteGridHint}
         </p>
-      )}
-      {reward && (
-        <div className="toast-win" role="status">
-          {t.earned} {reward.total} {t.points}
-          {reward.bonus > 0 && (
-            <span className="muted"> ({reward.bonus}՝ այս օրվա առաջին խաղը)</span>
-          )}
-        </div>
       )}
       {dead && (
         <div className="vm-panel vm-panel--bad">
