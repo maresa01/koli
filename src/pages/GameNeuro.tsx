@@ -48,7 +48,7 @@ export function GameNeuro() {
   }, [idx, done, sequence.length]);
 
   return (
-    <GameShell iconSrc="/neuro-1.png" title={t.neuroGame} howTo={t.neuroHowTo}>
+    <GameShell iconSrc="/neuro-1.png" title={t.neuroGame} howTo={t.neuroHowTo} demoKind="neuro">
       {() => (
         <div className="neuro-page">
           <div className="neuro-hud" aria-live="polite">

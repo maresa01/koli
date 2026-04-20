@@ -184,6 +184,7 @@ export function GameStroop() {
       title={t.stroopGame}
       howTo={t.stroopHowTo}
       introTour={introTour}
+      demoKind="stroop"
     >
       {({ freezeSession }) => <StroopBoard freezeSession={freezeSession} introTour={introTour} />}
     </GameShell>

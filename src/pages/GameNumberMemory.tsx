@@ -169,6 +169,7 @@ export function GameNumberMemory() {
       iconSrc="/game-icon-number.png"
       title={t.numberGame}
       howTo={t.numberHowTo}
+      demoKind="number"
     >
       {({ freezeSession }) => (
         <NumberBoard freezeSession={freezeSession} introTour={introTour} />

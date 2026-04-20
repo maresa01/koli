@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { t } from "../lib/strings";
 import { KoliMascot } from "./KoliGuide";
 import { GAME_SESSION_SECONDS } from "../lib/gameSession";
+import { GameDemo, type GameDemoKind } from "./GameDemo";
 import {
   INTRO_TOUR_TOTAL_SEC,
   cancelIntroTour,
@@ -129,15 +130,17 @@ type Props = {
   /** Ծանոթության տուր՝ մեկ ընդհանուր 5 րոպե, freezeSession չի կանգնեցնում ժամանակը */
   introTour?: boolean;
   iconSrc?: string;
+  demoKind?: GameDemoKind;
   children: (api: GameSessionApi) => ReactNode;
 };
 
-export function GameShell({ title, howTo, introTour = false, iconSrc, children }: Props) {
+export function GameShell({ title, howTo, introTour = false, iconSrc, demoKind, children }: Props) {
   const navigate = useNavigate();
   const [started, setStarted] = useState(false);
   const [frozen, setFrozen] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(GAME_SESSION_SECONDS);
   const [, forceTick] = useState(0);
+  const [introTab, setIntroTab] = useState<"demo" | "howto">("demo");
 
   const freezeSession = useCallback(() => {
     if (introTour) return;
@@ -204,22 +207,60 @@ export function GameShell({ title, howTo, introTour = false, iconSrc, children }
         {!started && (
           <>
             <div className="game-shell__intro">
-              <div className="game-shell__intro-visual">
-                {iconSrc ? (
-                  <img
-                    className="game-shell__intro-icon"
-                    src={iconSrc}
-                    alt=""
-                    width={160}
-                    height={160}
-                    decoding="async"
-                  />
-                ) : (
-                  <KoliMascot size="medium" className="game-shell__intro-mascot" alt="" />
-                )}
+              <div className="game-shell__intro-top">
+                <div className="game-shell__intro-visual">
+                  {iconSrc ? (
+                    <img
+                      className="game-shell__intro-icon"
+                      src={iconSrc}
+                      alt=""
+                      width={160}
+                      height={160}
+                      decoding="async"
+                    />
+                  ) : (
+                    <KoliMascot size="medium" className="game-shell__intro-mascot" alt="" />
+                  )}
+                </div>
+                <p className="game-shell__duration-line">{timerLabel}</p>
               </div>
-              <GameHowtoRich text={howTo} />
-              <p className="game-shell__duration-line">{timerLabel}</p>
+
+              {demoKind && (
+                <>
+                  <div className="game-shell__tabs" role="tablist" aria-label="Intro tabs">
+                    <button
+                      type="button"
+                      role="tab"
+                      aria-selected={introTab === "demo"}
+                      className={introTab === "demo" ? "game-shell__tab game-shell__tab--on" : "game-shell__tab"}
+                      onClick={() => setIntroTab("demo")}
+                    >
+                      Ինչպես խաղալ
+                    </button>
+                    <button
+                      type="button"
+                      role="tab"
+                      aria-selected={introTab === "howto"}
+                      className={introTab === "howto" ? "game-shell__tab game-shell__tab--on" : "game-shell__tab"}
+                      onClick={() => setIntroTab("howto")}
+                    >
+                      Խաղի նկարագրություն
+                    </button>
+                  </div>
+
+                  {introTab === "demo" ? (
+                    <div className="game-shell__demo" role="region" aria-label="Demo">
+                      <GameDemo kind={demoKind} />
+                    </div>
+                  ) : (
+                    <div className="game-shell__howtoWrap" role="region" aria-label="How to play">
+                      <GameHowtoRich text={howTo} />
+                    </div>
+                  )}
+                </>
+              )}
+
+              {!demoKind && <GameHowtoRich text={howTo} />}
             </div>
             <button
               type="button"

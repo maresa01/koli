@@ -150,7 +150,8 @@ export function endIntroTourStep(
 
 export function cancelIntroTour(navigate: NavigateFunction): void {
   persistTour(null);
-  navigate("/about", { replace: true });
+  // "Գլխավոր" պետք է տանի ամենասկզբնական էջ (ոչ թե /about).
+  navigate("/", { replace: true });
 }
 
 export function introTourTimeUpAdvance(navigate: NavigateFunction): void {

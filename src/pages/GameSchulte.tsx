@@ -173,7 +173,13 @@ function SchulteBoard({
 export function GameSchulte() {
   const introTour = useIntroTourGame();
   return (
-    <GameShell introTour={introTour} title={t.schulteGame} howTo={t.schulteHowTo}>
+    <GameShell
+      introTour={introTour}
+      iconSrc="/game-icon-schulte.svg"
+      title={t.schulteGame}
+      howTo={t.schulteHowTo}
+      demoKind="schulte"
+    >
       {({ freezeSession }) => (
         <SchulteBoard freezeSession={freezeSession} introTour={introTour} />
       )}

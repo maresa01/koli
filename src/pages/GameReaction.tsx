@@ -227,6 +227,7 @@ export function GameReaction() {
       iconSrc="/game-icon-reaction.png"
       title={t.reactionOptional}
       howTo={t.reactionHowTo}
+      demoKind="reaction"
     >
       {({ freezeSession }) => (
         <ReactionBoard freezeSession={freezeSession} introTour={introTour} />

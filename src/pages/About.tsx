@@ -1,8 +1,6 @@
 import { Link, useSearchParams } from "react-router-dom";
 import { t } from "../lib/strings";
-import {
-  getIntroCoins,
-} from "../lib/introTour";
+import { getIntroCoins } from "../lib/introTour.ts";
 
 export function About() {
   const [sp] = useSearchParams();

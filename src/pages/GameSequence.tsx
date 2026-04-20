@@ -143,6 +143,7 @@ export function GameSequence() {
       iconSrc="/game-icon-sequence.png"
       title={t.sequenceGame}
       howTo={t.sequenceHowTo}
+      demoKind="sequence"
     >
       {({ freezeSession }) => (
         <SequenceBoard freezeSession={freezeSession} introTour={introTour} />

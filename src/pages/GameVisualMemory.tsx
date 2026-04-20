@@ -253,6 +253,7 @@ export function GameVisualMemory() {
       iconSrc="/game-icon-visual.png"
       title={t.visualGame}
       howTo={t.visualHowTo}
+      demoKind="visual"
     >
       {({ freezeSession }) => (
         <VisualBoard freezeSession={freezeSession} introTour={introTour} />
