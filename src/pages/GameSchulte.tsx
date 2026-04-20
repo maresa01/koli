@@ -175,7 +175,7 @@ export function GameSchulte() {
   return (
     <GameShell
       introTour={introTour}
-      iconSrc="/game-icon-schulte.svg"
+      iconSrc="/game-icon-schulte.png"
       title={t.schulteGame}
       howTo={t.schulteHowTo}
       demoKind="schulte"

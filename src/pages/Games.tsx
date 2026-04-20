@@ -49,14 +49,14 @@ const cards: {
     to: "/games/stroop",
     title: t.stroopGame,
     desc: t.stroopDesc,
-    iconSrc: "/game-icon-stroop.svg",
+    iconSrc: "/game-icon-stroop.png",
     color: "card--sun",
   },
   {
     to: "/games/schulte",
     title: t.schulteGame,
     desc: t.schulteDesc,
-    icon: "🔲",
+    iconSrc: "/game-icon-schulte.png",
     color: "card--lilac",
   },
 ];

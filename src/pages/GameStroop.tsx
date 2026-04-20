@@ -180,7 +180,7 @@ export function GameStroop() {
   const introTour = useIntroTourGame();
   return (
     <GameShell
-      iconSrc="/game-icon-stroop.svg"
+      iconSrc="/game-icon-stroop.png"
       title={t.stroopGame}
       howTo={t.stroopHowTo}
       introTour={introTour}
