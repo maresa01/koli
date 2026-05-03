@@ -22,6 +22,8 @@ function formatMmSs(totalSec: number): string {
 function GameHowtoRich({ text }: { text: string }) {
   const cautionPrefix = "\u0548\u0582\u0577\u0561\u0564\u056b\u057c";
   const benefitPrefix = "\u0531\u0575\u057d\u0020\u056d\u0561\u0572\u0568";
+  /** «Ինչու՞ է լավ» → առանձին վերնագիր, հաջորդ տող(եր)ը՝ պատասխանի տեքստ (առանց «Պատասխան՝» նախաբանի)։ */
+  const whyGoodRe = /^Ինչու՞ է լավ\s*$/;
   const lines = text
     .replace(/\r/g, "")
     .split("\n")
@@ -100,6 +102,34 @@ function GameHowtoRich({ text }: { text: string }) {
     if (line.startsWith(benefitPrefix)) {
       pushPara([line], { note: "benefit" });
       i++;
+      continue;
+    }
+
+    if (whyGoodRe.test(line)) {
+      blocks.push(
+        <h3 key={`why-${i}`} className="game-shell__howto-subheading game-shell__howto-subheading--why">
+          {line}
+        </h3>,
+      );
+      i += 1;
+      const answerLines: string[] = [];
+      while (i < lines.length) {
+        const L = lines[i];
+        if (L.startsWith(cautionPrefix) || L.startsWith(benefitPrefix)) break;
+        if (whyGoodRe.test(L)) break;
+        if (/^\d+[.)]\s*/.test(L)) break;
+        const N = lines[i + 1];
+        if (N && /^\d+[.)]\s*/.test(N) && !/^\d+[.)]\s*/.test(L)) break;
+        answerLines.push(L);
+        i += 1;
+      }
+      if (answerLines.length > 0) {
+        blocks.push(
+          <p key={`ans-${i}`} className="game-shell__howto-block game-shell__howto-block--answer">
+            {answerLines.join(" ")}
+          </p>,
+        );
+      }
       continue;
     }
 

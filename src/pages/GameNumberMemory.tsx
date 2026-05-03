@@ -26,7 +26,14 @@ function NumberBoard({
   const [gameOver, setGameOver] = useState(false);
   const [won, setWon] = useState(false);
 
-  const showMs = Math.min(4500, 650 + level * 420);
+  // Վերջին երկու level-ները ավելի երկար են պահվում էկրանին,
+  // որ երեխան հասցնի տեսնել ու ֆիքսել երկար թիվը։
+  const showMs =
+    level === WIN_DIGITS
+      ? 6300
+      : level === WIN_DIGITS - 1
+        ? 5400
+        : Math.min(4500, 650 + level * 420);
 
   useEffect(() => {
     if (won || gameOver) return;

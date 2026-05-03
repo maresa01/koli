@@ -4,6 +4,8 @@ import { t } from "../lib/strings";
 // Demo-ի արագությունը կառավարելու համար մեկ գործակից.
 // Մեծացրու՝ եթե ուզում ես ավելի դանդաղ անցումներ։
 const DEMO_SPEED = 1.35;
+/** Reaction-ի բացատրությունը ավելի դանդաղ՝ երեխաների համար։ */
+const REACTION_DEMO_MULT = 2.4;
 
 export type GameDemoKind =
   | "reaction"
@@ -16,16 +18,26 @@ export type GameDemoKind =
 
 type Props = { kind: GameDemoKind };
 
-function DemoFrame({ children }: { children: React.ReactNode }) {
+function DemoFrame({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <div className="game-demo" aria-hidden>
+    <div className={["game-demo", className].filter(Boolean).join(" ")} aria-hidden>
       {children}
     </div>
   );
 }
 
 export function GameDemo({ kind }: Props) {
-  const frames = useMemo(() => makeFrames(kind).map((f) => ({ ...f, ms: Math.round(f.ms * DEMO_SPEED) })), [kind]);
+  const frames = useMemo(() => {
+    const raw = makeFrames(kind);
+    const mult = kind === "reaction" ? DEMO_SPEED * REACTION_DEMO_MULT : DEMO_SPEED;
+    return raw.map((f) => ({ ...f, ms: Math.round(f.ms * mult) }));
+  }, [kind]);
   const [idx, setIdx] = useState(0);
 
   useEffect(() => {
@@ -43,9 +55,9 @@ export function GameDemo({ kind }: Props) {
   if (!f) return null;
 
   return (
-    <DemoFrame>
+    <DemoFrame className={kind === "reaction" ? "game-demo--reaction" : undefined}>
       <div className="demo-stage">{f.render()}</div>
-      <div className="demo-caption">{f.caption}</div>
+      {f.caption ? <div className="demo-caption">{f.caption}</div> : null}
       {frames.length > 1 && (
         <div className="demo-dots" aria-hidden>
           {frames.map((_, i) => (
@@ -63,32 +75,29 @@ function makeFrames(kind: GameDemoKind): DemoFrameDef[] {
   if (kind === "reaction") {
     return [
       {
-        caption: "Սեղմիր՝ սկսելու համար",
-        ms: 1400,
+        caption: "",
+        ms: 1900,
         render: () => (
           <div className="demo-rt demo-rt--ready">
             <div className="demo-rt__label">{t.reactionClickToStart}</div>
-            <div className="demo-rt__tap">{t.reactionDontEarly}</div>
           </div>
         ),
       },
       {
-        caption: "Սպասիր կանաչին",
-        ms: 1700,
+        caption: "",
+        ms: 2600,
         render: () => (
           <div className="demo-rt demo-rt--wait">
-            <div className="demo-rt__label">{t.reactionWaitGreen}</div>
-            <div className="demo-rt__tap">{t.reactionDontEarly}</div>
+            <div className="demo-rt__label">Սպասիր</div>
           </div>
         ),
       },
       {
-        caption: "Կանաչ է՝ սեղմիր",
-        ms: 1400,
+        caption: "",
+        ms: 2100,
         render: () => (
           <div className="demo-rt demo-rt--go">
-            <div className="demo-rt__label">{t.reactionNow}</div>
-            <div className="demo-rt__tap">{t.tapWhenGreen}</div>
+            <div className="demo-rt__label demo-rt__label--go">Սեղմիր</div>
           </div>
         ),
       },
@@ -121,13 +130,14 @@ function makeFrames(kind: GameDemoKind): DemoFrameDef[] {
     );
     return [
       { caption: "Նայիր", ms: 1100, render: base },
-      { caption: "Հիշիր", ms: 850, render: () => lit(0) },
-      { caption: "Հիշիր", ms: 850, render: () => lit(1) },
-      { caption: "Հիշիր", ms: 850, render: () => lit(2) },
+      { caption: "Հիշիր հերթականությունը", ms: 850, render: () => lit(0) },
+      { caption: "Հիշիր հերթականությունը", ms: 850, render: () => lit(1) },
+      { caption: "Հիշիր հերթականությունը", ms: 850, render: () => lit(2) },
       { caption: "Հիմա դու", ms: 1100, render: base },
-      { caption: "Սեղմիր նույնը", ms: 850, render: () => lit(0) },
-      { caption: "Սեղմիր նույնը", ms: 850, render: () => lit(1) },
-      { caption: "Սեղմիր նույնը", ms: 850, render: () => lit(2) },
+      { caption: "", ms: 850, render: () => lit(0) },
+      { caption: "", ms: 850, render: () => lit(1) },
+      { caption: "", ms: 850, render: () => lit(2) },
+      { caption: "Կեցցես", ms: 1400, render: base },
     ];
   }
 
@@ -140,43 +150,43 @@ function makeFrames(kind: GameDemoKind): DemoFrameDef[] {
       </div>
     );
     return [
-      { caption: "Նայիր ու հիշիր", ms: 1250, render: () => grid(new Set([0, 3, 8])) },
+      { caption: "Հիշիր վանդակները", ms: 1250, render: () => grid(new Set([0, 3, 8])) },
       { caption: "Հիմա սեղմիր", ms: 1250, render: () => grid(new Set()) },
-      { caption: "Սեղմիր նույնը ", ms: 1250, render: () => grid(new Set([0])) },
-      { caption: "Սեղմիր նույնը ", ms: 1250, render: () => grid(new Set([0, 3])) },
-      { caption: "Ապրես", ms: 1250, render: () => grid(new Set([0, 3, 8])) },
+      { caption: "", ms: 1250, render: () => grid(new Set([0])) },
+      { caption: "", ms: 1250, render: () => grid(new Set([0, 3])) },
+      { caption: "Կեցցես", ms: 1250, render: () => grid(new Set([0, 3, 8])) },
     ];
   }
 
   if (kind === "number") {
     return [
       {
-        caption: "Հիշիր թիվը",
-        ms: 1400,
+        caption: "",
+        ms: 2000,
         render: () => (
           <div className="demo-num">
             <div className="demo-num__screen">4827</div>
-            <div className="demo-num__hint">{t.watch}</div>
+            <div className="demo-num__hint">Հիշիր թիվը</div>
           </div>
         ),
       },
       {
-        caption: "Գրիր նույն թիվը",
-        ms: 1400,
+        caption: "",
+        ms: 2000,
         render: () => (
           <div className="demo-num">
             <div className="demo-num__screen">••••</div>
-            <div className="demo-num__hint">{t.enterNumber}</div>
+            <div className="demo-num__hint">Մուտքագրիր</div>
           </div>
         ),
       },
       {
-        caption: "Հաստատի՛ր",
-        ms: 1400,
+        caption: "",
+        ms: 2000,
         render: () => (
           <div className="demo-num">
             <div className="demo-num__screen">4827</div>
-            <div className="demo-num__hint">{t.submit}</div>
+            <div className="demo-num__hint">Հաստատիր</div>
           </div>
         ),
       },
@@ -203,6 +213,12 @@ function makeFrames(kind: GameDemoKind): DemoFrameDef[] {
       { caption: "Գտիր 1-ը", ms: 1100, render: () => grid(1) },
       { caption: "Հետո՝ 2-ը", ms: 1100, render: () => grid(2) },
       { caption: "Հետո՝ 3-ը", ms: 1100, render: () => grid(3) },
+      { caption: "Հերթականությամբ մինչև վերջ", ms: 700, render: () => grid(4) },
+      { caption: "Հերթականությամբ մինչև վերջ", ms: 700, render: () => grid(5) },
+      { caption: "Հերթականությամբ մինչև վերջ", ms: 700, render: () => grid(6) },
+      { caption: "Հերթականությամբ մինչև վերջ", ms: 700, render: () => grid(7) },
+      { caption: "Հերթականությամբ մինչև վերջ", ms: 700, render: () => grid(8) },
+      { caption: "Հերթականությամբ մինչև վերջ", ms: 900, render: () => grid(9) },
     ];
   }
 
